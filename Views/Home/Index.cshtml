@@ -1,0 +1,95 @@
+@{
+    ViewData["Title"] = "Главная";
+    var top3 = ViewBag.Top3 as List<RestaurantDTO> ?? [];
+    var cuisines = ViewBag.Cuisines as IEnumerable<Cuisine> ?? [];
+}
+
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Astana Food Reviews</h1>
+        <p class="hero-sub">Честные отзывы о ресторанах и кафе Астаны от реальных жителей города</p>
+        <div class="d-flex gap-3 justify-content-center mt-4 flex-wrap">
+            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-brand">Смотреть заведения</a>
+            @if (!User.Identity!.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-brand">Присоединиться</a>
+            }
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <!-- Stats -->
+    <div class="row g-3 mb-5 justify-content-center">
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value">@ViewBag.RestaurantCount</div>
+                <div class="stat-label">Заведений</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value">@ViewBag.ReviewCount</div>
+                <div class="stat-label">Отзывов</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="glass-card p-3 text-center">
+                <div class="stat-value">@ViewBag.AverageRating</div>
+                <div class="stat-label">Средний рейтинг</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 3 -->
+    @if (top3.Any())
+    {
+        <h2 class="section-title">Топ заведений</h2>
+        <div class="row g-3 mb-5">
+            @foreach (var r in top3)
+            {
+                <div class="col-md-4">
+                    <a href="/restaurants/@r.Id" class="text-decoration-none">
+                        <div class="glass-card rest-card">
+                            @if (!string.IsNullOrEmpty(r.ImageUrl))
+                            {
+                                <img src="@r.ImageUrl" class="rest-card-img" alt="@r.Title" />
+                            }
+                            else
+                            {
+                                <div class="rest-card-img-placeholder">🍽</div>
+                            }
+                            <div class="rest-card-body">
+                                <div class="rest-title">@r.Title</div>
+                                <div class="rest-meta">@r.CuisineName · @r.DistrictName</div>
+                                <div class="d-flex align-items-center gap-2 rest-footer">
+                                    <span class="stars">@Html.Raw(HelperDTO.StarsHtml(r.AverageRating))</span>
+                                    <span class="text-muted small">@r.AverageRating (@r.ReviewCount отз.)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Cuisines -->
+    <h2 class="section-title">Выбрать по кухне</h2>
+    <div class="d-flex flex-wrap gap-2 mb-5">
+        @foreach (var c in cuisines)
+        {
+            <a href="/restaurants?cuisineId=@c.Id" class="cuisine-pill">@c.Title</a>
+        }
+    </div>
+
+    <!-- CTA for guests -->
+    @if (!User.Identity!.IsAuthenticated)
+    {
+        <div class="glass-card p-4 text-center">
+            <h4 class="brand-font mb-2">Были в ресторане?</h4>
+            <p class="text-muted mb-3">Зарегистрируйтесь и помогите другим жителям Астаны выбрать лучшее заведение</p>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-brand">Написать отзыв</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,78 @@
+@model CreateReviewViewModel
+@{
+    ViewData["Title"] = "Написать отзыв";
+    string restaurantName = ViewBag.RestaurantName ?? "";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <h1 class="section-title">Отзыв о «@restaurantName»</h1>
+            <div class="glass-card p-4">
+                <form asp-controller="Reviews" asp-action="New" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RestaurantId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Заголовок отзыва *</label>
+                        <input asp-for="Title" class="form-control" placeholder="Кратко о визите" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Text" class="form-label">Подробный отзыв</label>
+                        <textarea asp-for="Text" class="form-control" rows="4" placeholder="Расскажите подробнее..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Общая оценка *</label>
+                        <div class="star-input">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" id="Rating-@i" name="Rating" value="@i" @(i == 5 ? "checked" : "") />
+                                <label for="Rating-@i">★</label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Еда *</label>
+                        <div class="star-input">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" id="FoodRating-@i" name="FoodRating" value="@i" @(i == 5 ? "checked" : "") />
+                                <label for="FoodRating-@i">★</label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Сервис *</label>
+                        <div class="star-input">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" id="ServiceRating-@i" name="ServiceRating" value="@i" @(i == 5 ? "checked" : "") />
+                                <label for="ServiceRating-@i">★</label>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Цена / Качество *</label>
+                        <div class="star-input">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio" id="PriceRating-@i" name="PriceRating" value="@i" @(i == 5 ? "checked" : "") />
+                                <label for="PriceRating-@i">★</label>
+                            }
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-brand w-100 mt-2">Опубликовать отзыв</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { @await Html.PartialAsync("_ValidationScriptsPartial") }

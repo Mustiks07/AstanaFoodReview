@@ -1,0 +1,50 @@
+@model IEnumerable<ReviewDTO>
+@{
+    ViewData["Title"] = "Мои отзывы";
+    var reviews = Model.ToList();
+}
+
+<div class="container py-4">
+    <h1 class="section-title">Мои отзывы</h1>
+
+    @if (!reviews.Any())
+    {
+        <div class="glass-card p-5 text-center text-muted">
+            <p>Вы ещё не оставили ни одного отзыва</p>
+            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-brand btn-sm">Найти заведение</a>
+        </div>
+    }
+    else
+    {
+        <div class="glass-card p-0" style="overflow:hidden;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Заведение</th>
+                        <th>Заголовок</th>
+                        <th>Оценка</th>
+                        <th>Дата</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in reviews)
+                    {
+                        <tr>
+                            <td><a href="/restaurants/@r.RestaurantId">@r.RestaurantName</a></td>
+                            <td>@r.Title</td>
+                            <td><span class="stars">@Html.Raw(HelperDTO.StarsHtml(r.Rating))</span></td>
+                            <td class="text-muted small">@r.DateCreated.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                <form asp-controller="Reviews" asp-action="Delete" asp-route-id="@r.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-ghost btn-sm" onclick="return confirm('Удалить отзыв?')">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

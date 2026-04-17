@@ -1,0 +1,64 @@
+@model IEnumerable<District>
+@{
+    ViewData["Title"] = "Карта";
+    var districts = Model.ToList();
+}
+
+<div class="container py-4">
+    <h1 class="section-title">Карта заведений</h1>
+
+    <div id="map" class="mb-4"></div>
+
+    <div class="row g-3">
+        @foreach (var d in districts)
+        {
+            <div class="col-6 col-md-3">
+                <a href="/restaurants?districtId=@d.Id" class="text-decoration-none">
+                    <div class="glass-card p-3 text-center">
+                        <div class="fw-semibold" style="color:var(--text);">@d.Title</div>
+                        <div class="text-muted small">@d.Restaurants.Count заведений</div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    var map = L.map('map').setView([51.18, 71.45], 11);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© CartoDB'
+    }).addTo(map);
+
+    var districts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+        districts.Where(d => d.Restaurants.Any()).Select(d => new {
+            name = d.Title,
+            count = d.Restaurants.Count
+        })
+    ));
+
+    // Static approximate coordinates for Astana districts
+    var coords = {
+        "Есіл":     [51.175, 71.42],
+        "Алматы":   [51.15,  71.47],
+        "Сарыарқа": [51.19,  71.50],
+        "Нұра":     [51.22,  71.40],
+        "Байқоңыр": [51.12,  71.38],
+        "Жетісу":   [51.14,  71.54],
+        "Алатау":   [51.20,  71.33],
+        "Байтерек": [51.18,  71.44]
+    };
+
+    var brandColor = "#F97316";
+    districts.forEach(function(d) {
+        var ll = coords[d.name];
+        if (!ll) return;
+        L.circleMarker(ll, { radius: 10 + d.count * 2, color: brandColor, fillColor: brandColor, fillOpacity: 0.5 })
+            .bindPopup("<b>" + d.name + "</b><br>" + d.count + " заведений")
+            .addTo(map);
+    });
+</script>
+}

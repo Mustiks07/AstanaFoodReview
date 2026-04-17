@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Панель администратора";
+    Layout = "_AdminLayout";
+}
+
+<h1 class="section-title">Панель администратора</h1>
+<div class="row g-3">
+    <div class="col-md-3">
+        <a href="/admin/restaurants" class="text-decoration-none">
+            <div class="glass-card p-4 text-center">
+                <div class="fs-2 mb-1">🍽</div>
+                <div class="fw-semibold" style="color:var(--text);">Заведения</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="/admin/reviews" class="text-decoration-none">
+            <div class="glass-card p-4 text-center">
+                <div class="fs-2 mb-1">💬</div>
+                <div class="fw-semibold" style="color:var(--text);">Отзывы</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="/admin/cuisines" class="text-decoration-none">
+            <div class="glass-card p-4 text-center">
+                <div class="fs-2 mb-1">🍜</div>
+                <div class="fw-semibold" style="color:var(--text);">Кухни</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3">
+        <a href="/admin/districts" class="text-decoration-none">
+            <div class="glass-card p-4 text-center">
+                <div class="fs-2 mb-1">🗺</div>
+                <div class="fw-semibold" style="color:var(--text);">Районы</div>
+            </div>
+        </a>
+    </div>
+</div>

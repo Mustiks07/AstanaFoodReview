@@ -1,0 +1,33 @@
+@model IEnumerable<Cuisine>
+@{
+    ViewData["Title"] = "Кухни";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="section-title mb-0">Кухни</h1>
+    <a href="/admin/cuisines/edit/0" class="btn btn-brand btn-sm">+ Добавить</a>
+</div>
+
+<div class="glass-card p-0" style="overflow:auto;">
+    <table class="admin-table">
+        <thead><tr><th>#</th><th>Название</th><th>Ресторанов</th><th></th></tr></thead>
+        <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Id</td>
+                    <td>@c.Title</td>
+                    <td>@c.Restaurants.Count</td>
+                    <td>
+                        <a href="/admin/cuisines/edit/@c.Id" class="btn-ghost btn-sm me-1">Изменить</a>
+                        <form action="/admin/cuisines/delete/@c.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-ghost btn-sm" onclick="return confirm('Удалить?')">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,179 @@
+@model RestaurantDTO
+@using AstanaFoodReviews.Domain.Enums
+@{
+    ViewData["Title"] = Model.Title;
+    var currentUser = ViewBag.CurrentUser as Microsoft.AspNetCore.Identity.IdentityUser;
+    var userVotes   = ViewBag.UserVotes as Dictionary<int, ReviewVoteTypeEnum?> ?? [];
+    bool isAdmin    = ViewBag.IsAdmin == true;
+
+    var restaurant  = (ViewData.Model as RestaurantDTO)!;
+}
+
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Main info -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+                    <div>
+                        <h1 class="brand-font fs-2 mb-1">@Model.Title</h1>
+                        <div class="d-flex flex-wrap gap-2 mb-2">
+                            <span class="badge-cuisine">@Model.CuisineName</span>
+                            <span class="badge-cuisine">@Model.DistrictName</span>
+                            <span class="badge-price">@Model.PriceRangeLabel</span>
+                            @if (Model.IsVerified)
+                            {
+                                <span class="badge-verified">✓ Верифицировано</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="stars-lg">@Html.Raw(HelperDTO.StarsHtml(Model.AverageRating))</div>
+                        <div class="text-muted small">@Model.AverageRating из 5 · @Model.ReviewCount отзывов</div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <p class="text-muted mt-2">@Model.Description</p>
+                }
+
+                <hr class="section-divider my-3" />
+
+                <div class="row g-2 text-sm">
+                    @if (!string.IsNullOrEmpty(Model.Address))
+                    {
+                        <div class="col-12"><span class="text-muted">📍</span> @Model.Address</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <div class="col-12"><span class="text-muted">📞</span> <a href="tel:@Model.Phone">@Model.Phone</a></div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <div class="col-12"><span class="text-muted">🌐</span> <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a></div>
+                    }
+                </div>
+            </div>
+
+            <!-- Reviews section header -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="section-title mb-0">Отзывы</h2>
+                @if (currentUser != null)
+                {
+                    <a href="/reviews/new/@Model.Id" class="btn btn-brand btn-sm">+ Оставить отзыв</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline-brand btn-sm">Войти, чтобы написать</a>
+                }
+            </div>
+
+            @{
+                // We need to get reviews from ViewBag — we pass them through the restaurant DTO
+                // Actually the reviews are loaded in the restaurant entity so we need them from context
+                // They're passed via ViewBag in the controller
+            }
+            @if (ViewBag.Reviews is IEnumerable<AstanaFoodReviews.Models.ReviewDTO> reviews && reviews.Any())
+            {
+                foreach (var review in reviews)
+                {
+                    <div class="glass-card review-card">
+                        <div class="review-header">
+                            <div>
+                                <span class="review-author">@(review.AuthorName ?? "Аноним")</span>
+                                <span class="text-muted small ms-2">@review.DateCreated.ToString("dd.MM.yyyy")</span>
+                            </div>
+                            <div class="stars">@Html.Raw(HelperDTO.StarsHtml(review.Rating))</div>
+                        </div>
+                        <div class="review-title">@review.Title</div>
+                        @if (!string.IsNullOrEmpty(review.Text))
+                        {
+                            <div class="review-text">@review.Text</div>
+                        }
+                        <div class="review-ratings">
+                            <div class="review-rating-item">Еда: <span>@review.FoodRating/5</span></div>
+                            <div class="review-rating-item">Сервис: <span>@review.ServiceRating/5</span></div>
+                            <div class="review-rating-item">Цена/кач-во: <span>@review.PriceRating/5</span></div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 flex-wrap mt-2">
+                            @if (currentUser != null)
+                            {
+                                var currentVote = userVotes.GetValueOrDefault(review.Id);
+                                <form asp-controller="Reviews" asp-action="Vote" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reviewId" value="@review.Id" />
+                                    <input type="hidden" name="voteType" value="0" />
+                                    <button type="submit" class="vote-btn @(currentVote == ReviewVoteTypeEnum.Useful ? "active" : "")">
+                                        👍 Полезно (@review.UsefulCount)
+                                    </button>
+                                </form>
+                                <form asp-controller="Reviews" asp-action="Vote" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reviewId" value="@review.Id" />
+                                    <input type="hidden" name="voteType" value="1" />
+                                    <button type="submit" class="vote-btn @(currentVote == ReviewVoteTypeEnum.NotUseful ? "active" : "")">
+                                        👎 Не полезно (@review.NotUsefulCount)
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">👍 @review.UsefulCount · 👎 @review.NotUsefulCount</span>
+                            }
+                            @if (currentUser?.Id == review.AuthorId || isAdmin)
+                            {
+                                <form asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" method="post" class="d-inline ms-auto">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-ghost" onclick="return confirm('Удалить отзыв?')">Удалить</button>
+                                </form>
+                            }
+                        </div>
+
+                        @foreach (var resp in review.OwnerResponses)
+                        {
+                            <div class="owner-response mt-2">
+                                <div class="owner-response-label">Ответ заведения от @resp.AdminName · @resp.DateCreated.ToString("dd.MM.yyyy")</div>
+                                <div class="text-muted small">@resp.Text</div>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="glass-card p-4 text-center text-muted">Отзывов пока нет. Будьте первым!</div>
+            }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-3">
+                <h5 class="brand-font mb-3">Рейтинг</h5>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between text-muted small mb-1"><span>Общий</span><span>@Model.AverageRating / 5</span></div>
+                    <div class="progress" style="height:6px;background:var(--border);">
+                        <div class="progress-bar" style="width:@(Model.AverageRating * 20)%;background:var(--brand);"></div>
+                    </div>
+                </div>
+            </div>
+
+            @if (currentUser == null)
+            {
+                <div class="glass-card p-4 text-center">
+                    <p class="text-muted small mb-2">Войдите, чтобы оставить отзыв</p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-brand btn-sm w-100">Войти</a>
+                </div>
+            }
+            else
+            {
+                <a href="/reviews/new/@Model.Id" class="btn btn-brand w-100 mb-2">+ Написать отзыв</a>
+            }
+
+            @if (isAdmin)
+            {
+                <a href="/admin/restaurants/edit/@Model.Id" class="btn btn-outline-brand w-100 btn-sm">⚙ Редактировать</a>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,78 @@
+@model CreateRestaurantViewModel
+@{
+    ViewData["Title"] = "Редактировать заведение";
+    int restaurantId  = ViewBag.RestaurantId ?? 0;
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <h1 class="section-title">Редактировать заведение</h1>
+            <div class="glass-card p-4">
+                <form asp-action="Edit" asp-route-id="@restaurantId" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label">Название *</label>
+                        <input asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label">Описание</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label">Адрес *</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label">Телефон</label>
+                            <input asp-for="Phone" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Website" class="form-label">Сайт</label>
+                            <input asp-for="Website" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ImageUrl" class="form-label">URL фотографии</label>
+                        <input asp-for="ImageUrl" class="form-control" />
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="DistrictId" class="form-label">Район *</label>
+                            <select asp-for="DistrictId" class="form-select">
+                                @foreach (var d in Model.Districts)
+                                {
+                                    <option value="@d.Id" selected="@(Model.DistrictId == d.Id)">@d.Title</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="CuisineId" class="form-label">Кухня *</label>
+                            <select asp-for="CuisineId" class="form-select">
+                                @foreach (var c in Model.Cuisines)
+                                {
+                                    <option value="@c.Id" selected="@(Model.CuisineId == c.Id)">@c.Title</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="PriceRange" class="form-label">Ценовой диапазон</label>
+                            <select asp-for="PriceRange" class="form-select">
+                                <option value="0" selected="@(Model.PriceRange == PriceRangeEnum.Budget)">до 2000 ₸</option>
+                                <option value="1" selected="@(Model.PriceRange == PriceRangeEnum.Medium)">2000–5000 ₸</option>
+                                <option value="2" selected="@(Model.PriceRange == PriceRangeEnum.Premium)">5000–15000 ₸</option>
+                                <option value="3" selected="@(Model.PriceRange == PriceRangeEnum.Luxury)">от 15000 ₸</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-brand w-100">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { @await Html.PartialAsync("_ValidationScriptsPartial") }

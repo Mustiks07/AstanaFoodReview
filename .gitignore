@@ -1,0 +1,25 @@
+## .NET / ASP.NET Core
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+*~
+
+# Secrets / Config
+appsettings.Development.json
+*.pfx
+*.p12
+
+# Migrations (optional — uncomment if you want to track them)
+# Migrations/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Rider/VS Code
+.idea/
+.vscode/
+*.ncrunch*

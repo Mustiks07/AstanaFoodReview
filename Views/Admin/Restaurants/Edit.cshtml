@@ -1,0 +1,71 @@
+@model AstanaFoodReviews.Domain.Entities.Restaurant
+@{
+    ViewData["Title"] = "Редактировать заведение";
+    Layout = "_AdminLayout";
+    var districts = ViewBag.Districts as IEnumerable<District> ?? [];
+    var cuisines  = ViewBag.Cuisines  as IEnumerable<Cuisine>  ?? [];
+}
+
+<h1 class="section-title">Редактировать: @Model.Title</h1>
+<div class="glass-card p-4" style="max-width:700px;">
+    <form action="/admin/restaurants/edit/@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label class="form-label">Название *</label>
+            <input name="title" class="form-control" value="@Model.Title" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea name="description" class="form-control" rows="3">@Model.Description</textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Адрес</label>
+            <input name="address" class="form-control" value="@Model.Address" />
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Телефон</label>
+                <input name="phone" class="form-control" value="@Model.Phone" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Сайт</label>
+                <input name="website" class="form-control" value="@Model.Website" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">URL фотографии</label>
+            <input name="imageUrl" class="form-control" value="@Model.ImageUrl" />
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Район</label>
+                <select name="districtId" class="form-select">
+                    @foreach (var d in districts)
+                    {
+                        <option value="@d.Id" selected="@(Model.DistrictId == d.Id)">@d.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Кухня</label>
+                <select name="cuisineId" class="form-select">
+                    @foreach (var c in cuisines)
+                    {
+                        <option value="@c.Id" selected="@(Model.CuisineId == c.Id)">@c.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Верифицировано</label>
+                <div class="form-check mt-2">
+                    <input name="isVerified" type="checkbox" class="form-check-input" id="isVerified" value="true" checked="@Model.IsVerified" />
+                    <label class="form-check-label text-muted" for="isVerified">Да</label>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-brand">Сохранить</button>
+            <a href="/admin/restaurants" class="btn btn-ghost">Отмена</a>
+        </div>
+    </form>
+</div>
