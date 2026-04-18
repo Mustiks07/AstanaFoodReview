@@ -69,7 +69,7 @@ public class RestaurantsController : Controller
         return View(HelperDTO.Transform(restaurant));
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> New()
     {
         var vm = new CreateRestaurantViewModel
@@ -80,7 +80,7 @@ public class RestaurantsController : Controller
         return View(vm);
     }
 
-    [HttpPost, Authorize, ValidateAntiForgeryToken]
+    [HttpPost, Authorize(Roles = "Admin"), ValidateAntiForgeryToken]
     public async Task<IActionResult> New(CreateRestaurantViewModel vm)
     {
         if (!ModelState.IsValid)

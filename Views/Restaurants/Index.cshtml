@@ -8,7 +8,7 @@
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1 class="section-title mb-0">Заведения Астаны</h1>
-        @if (User.Identity!.IsAuthenticated)
+        @if (User.IsInRole("Admin"))
         {
             <a asp-action="New" class="btn btn-brand btn-sm">+ Добавить</a>
         }
