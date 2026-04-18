@@ -5,7 +5,7 @@ namespace AstanaFoodReviews.Controllers.Admin;
 
 [Authorize(Roles = "Admin")]
 [Route("admin")]
-public class Core : Controller
+public class AdminCoreController : Controller
 {
     [Route("")]
     [Route("index")]

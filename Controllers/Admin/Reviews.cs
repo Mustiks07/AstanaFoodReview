@@ -10,12 +10,12 @@ namespace AstanaFoodReviews.Controllers.Admin;
 
 [Authorize(Roles = "Admin")]
 [Route("admin/reviews")]
-public class Reviews : Controller
+public class AdminReviewsController : Controller
 {
     private readonly DataManager _data;
     private readonly UserManager<IdentityUser> _userManager;
 
-    public Reviews(DataManager data, UserManager<IdentityUser> userManager)
+    public AdminReviewsController(DataManager data, UserManager<IdentityUser> userManager)
     {
         _data = data;
         _userManager = userManager;
@@ -24,9 +24,8 @@ public class Reviews : Controller
     [Route("")]
     public async Task<IActionResult> Index()
     {
-        // Collect all reviews from all restaurants
         var restaurants = (await _data.Restaurants.GetRestaurantsAsync()).ToList();
-        var allReviews = new List<Models.ReviewDTO>();
+        var allReviews = new List<ReviewDTO>();
         foreach (var r in restaurants)
         {
             var reviews = await _data.Reviews.GetReviewsByRestaurantAsync(r.Id);
@@ -51,14 +50,12 @@ public class Reviews : Controller
             return RedirectToAction(nameof(Index));
 
         var user = await _userManager.GetUserAsync(User);
-        var response = new OwnerResponse
+        await _data.OwnerResponses.SaveAsync(new OwnerResponse
         {
             ReviewId = id,
             AdminId  = user?.Id,
             Text     = text
-        };
-
-        await _data.OwnerResponses.SaveAsync(response);
+        });
         return RedirectToAction(nameof(Index));
     }
 }

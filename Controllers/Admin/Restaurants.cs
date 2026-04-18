@@ -7,11 +7,11 @@ namespace AstanaFoodReviews.Controllers.Admin;
 
 [Authorize(Roles = "Admin")]
 [Route("admin/restaurants")]
-public class Restaurants : Controller
+public class AdminRestaurantsController : Controller
 {
     private readonly DataManager _data;
 
-    public Restaurants(DataManager data) => _data = data;
+    public AdminRestaurantsController(DataManager data) => _data = data;
 
     [Route("")]
     public async Task<IActionResult> Index()
@@ -34,16 +34,9 @@ public class Restaurants : Controller
     [HttpPost("edit/{id:int}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
-        int id,
-        string title,
-        string? description,
-        string? address,
-        string? phone,
-        string? website,
-        string? imageUrl,
-        int districtId,
-        int cuisineId,
-        bool isVerified)
+        int id, string title, string? description, string? address,
+        string? phone, string? website, string? imageUrl,
+        int districtId, int cuisineId, bool isVerified)
     {
         var restaurant = await _data.Restaurants.GetRestaurantByIdAsync(id);
         if (restaurant == null) return NotFound();

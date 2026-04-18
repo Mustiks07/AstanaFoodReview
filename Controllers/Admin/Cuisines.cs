@@ -7,11 +7,11 @@ namespace AstanaFoodReviews.Controllers.Admin;
 
 [Authorize(Roles = "Admin")]
 [Route("admin/cuisines")]
-public class Cuisines : Controller
+public class AdminCuisinesController : Controller
 {
     private readonly DataManager _data;
 
-    public Cuisines(DataManager data) => _data = data;
+    public AdminCuisinesController(DataManager data) => _data = data;
 
     [Route("")]
     public async Task<IActionResult> Index()
