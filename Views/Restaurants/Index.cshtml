@@ -70,8 +70,8 @@
             @foreach (var r in Model)
             {
                 <div class="col-sm-6 col-lg-4 col-xl-3">
-                    <a href="/restaurants/@r.Id" class="text-decoration-none">
-                        <div class="glass-card rest-card h-100">
+                    <a href="/restaurants/@r.Id" class="text-decoration-none d-block h-100">
+                        <div class="rest-card h-100">
                             @if (!string.IsNullOrEmpty(r.ImageUrl))
                             {
                                 <img src="@r.ImageUrl" class="rest-card-img" alt="@r.Title" />
