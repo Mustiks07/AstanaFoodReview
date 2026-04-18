@@ -7,8 +7,8 @@ obj/
 *.swp
 *~
 
-# Secrets / Config
-appsettings.Development.json
+# Secrets / Config (user-specific secrets only)
+# appsettings.Development.json is tracked so LocalDB config isn't overridden
 *.pfx
 *.p12
 
