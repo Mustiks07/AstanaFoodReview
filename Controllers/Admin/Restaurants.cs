@@ -17,7 +17,7 @@ public class Restaurants : Controller
     public async Task<IActionResult> Index()
     {
         var restaurants = await _data.Restaurants.GetRestaurantsAsync();
-        return View(HelperDTO.TransformRestaurants(restaurants));
+        return View("~/Views/Admin/Restaurants/Index.cshtml", HelperDTO.TransformRestaurants(restaurants));
     }
 
     [HttpGet("edit/{id:int}")]
@@ -28,7 +28,7 @@ public class Restaurants : Controller
 
         ViewBag.Districts = await _data.Districts.GetDistrictsAsync();
         ViewBag.Cuisines  = await _data.Cuisines.GetCuisinesAsync();
-        return View(restaurant);
+        return View("~/Views/Admin/Restaurants/Edit.cshtml", restaurant);
     }
 
     [HttpPost("edit/{id:int}")]

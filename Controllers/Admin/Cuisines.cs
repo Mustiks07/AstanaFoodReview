@@ -15,17 +15,15 @@ public class Cuisines : Controller
 
     [Route("")]
     public async Task<IActionResult> Index()
-    {
-        return View(await _data.Cuisines.GetCuisinesAsync());
-    }
+        => View("~/Views/Admin/Cuisines/Index.cshtml", await _data.Cuisines.GetCuisinesAsync());
 
     [HttpGet("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
-        if (id == 0) return View(new Cuisine());
+        if (id == 0) return View("~/Views/Admin/Cuisines/Edit.cshtml", new Cuisine());
         var entity = await _data.Cuisines.GetCuisineByIdAsync(id);
         if (entity == null) return NotFound();
-        return View(entity);
+        return View("~/Views/Admin/Cuisines/Edit.cshtml", entity);
     }
 
     [HttpPost("edit/{id:int}")]

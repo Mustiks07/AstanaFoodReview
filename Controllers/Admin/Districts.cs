@@ -15,17 +15,15 @@ public class Districts : Controller
 
     [Route("")]
     public async Task<IActionResult> Index()
-    {
-        return View(await _data.Districts.GetDistrictsAsync());
-    }
+        => View("~/Views/Admin/Districts/Index.cshtml", await _data.Districts.GetDistrictsAsync());
 
     [HttpGet("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
-        if (id == 0) return View(new District());
+        if (id == 0) return View("~/Views/Admin/Districts/Edit.cshtml", new District());
         var entity = await _data.Districts.GetDistrictByIdAsync(id);
         if (entity == null) return NotFound();
-        return View(entity);
+        return View("~/Views/Admin/Districts/Edit.cshtml", entity);
     }
 
     [HttpPost("edit/{id:int}")]

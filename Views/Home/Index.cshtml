@@ -4,38 +4,41 @@
     var cuisines = ViewBag.Cuisines as IEnumerable<Cuisine> ?? [];
 }
 
+<!-- Hero -->
 <section class="hero">
     <div class="container">
-        <h1 class="hero-title">Astana Food Reviews</h1>
+        <div class="mb-3" style="font-size:3rem;">🍽</div>
+        <h1 class="hero-title">Astana <span>Food</span> Reviews</h1>
         <p class="hero-sub">Честные отзывы о ресторанах и кафе Астаны от реальных жителей города</p>
         <div class="d-flex gap-3 justify-content-center mt-4 flex-wrap">
-            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-brand">Смотреть заведения</a>
+            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-brand">Найти заведение</a>
             @if (!User.Identity!.IsAuthenticated)
             {
-                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-brand">Присоединиться</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-outline-brand">Написать отзыв</a>
             }
         </div>
     </div>
 </section>
 
 <div class="container py-5">
+
     <!-- Stats -->
     <div class="row g-3 mb-5 justify-content-center">
         <div class="col-6 col-md-3">
-            <div class="glass-card p-3 text-center">
+            <div class="stat-card">
                 <div class="stat-value">@ViewBag.RestaurantCount</div>
                 <div class="stat-label">Заведений</div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="glass-card p-3 text-center">
+            <div class="stat-card">
                 <div class="stat-value">@ViewBag.ReviewCount</div>
                 <div class="stat-label">Отзывов</div>
             </div>
         </div>
         <div class="col-6 col-md-3">
-            <div class="glass-card p-3 text-center">
-                <div class="stat-value">@ViewBag.AverageRating</div>
+            <div class="stat-card">
+                <div class="stat-value" style="font-size:1.8rem;">@ViewBag.AverageRating ★</div>
                 <div class="stat-label">Средний рейтинг</div>
             </div>
         </div>
@@ -44,13 +47,16 @@
     <!-- Top 3 -->
     @if (top3.Any())
     {
-        <h2 class="section-title">Топ заведений</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="section-title mb-0">Лучшие заведения</h2>
+            <a asp-controller="Top" asp-action="Index" class="btn btn-ghost btn-sm">Весь рейтинг →</a>
+        </div>
         <div class="row g-3 mb-5">
             @foreach (var r in top3)
             {
                 <div class="col-md-4">
                     <a href="/restaurants/@r.Id" class="text-decoration-none">
-                        <div class="glass-card rest-card">
+                        <div class="rest-card">
                             @if (!string.IsNullOrEmpty(r.ImageUrl))
                             {
                                 <img src="@r.ImageUrl" class="rest-card-img" alt="@r.Title" />
@@ -62,9 +68,17 @@
                             <div class="rest-card-body">
                                 <div class="rest-title">@r.Title</div>
                                 <div class="rest-meta">@r.CuisineName · @r.DistrictName</div>
-                                <div class="d-flex align-items-center gap-2 rest-footer">
+                                @if (!string.IsNullOrEmpty(r.Address))
+                                {
+                                    <div class="rest-meta" style="font-size:.75rem;">📍 @r.Address</div>
+                                }
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge-price">@r.PriceRangeLabel</span>
+                                    @if (r.IsVerified){ <span class="badge-verified">✓ Верифицировано</span> }
+                                </div>
+                                <div class="rest-footer d-flex align-items-center gap-2">
                                     <span class="stars">@Html.Raw(HelperDTO.StarsHtml(r.AverageRating))</span>
-                                    <span class="text-muted small">@r.AverageRating (@r.ReviewCount отз.)</span>
+                                    <span style="color:var(--text-muted);font-size:.82rem;">@r.AverageRating · @r.ReviewCount отз.</span>
                                 </div>
                             </div>
                         </div>
@@ -83,12 +97,13 @@
         }
     </div>
 
-    <!-- CTA for guests -->
+    <!-- CTA -->
     @if (!User.Identity!.IsAuthenticated)
     {
-        <div class="glass-card p-4 text-center">
-            <h4 class="brand-font mb-2">Были в ресторане?</h4>
-            <p class="text-muted mb-3">Зарегистрируйтесь и помогите другим жителям Астаны выбрать лучшее заведение</p>
+        <div class="card-base p-4 p-md-5 text-center" style="background:linear-gradient(135deg,#FFF7ED,#FFFBF5);">
+            <div style="font-size:2.5rem;margin-bottom:.75rem;">✍️</div>
+            <h4 class="brand-font mb-2" style="color:var(--text);">Были в ресторане?</h4>
+            <p style="color:var(--text-muted);" class="mb-3">Зарегистрируйтесь и помогите другим жителям Астаны выбрать лучшее заведение</p>
             <a asp-controller="Account" asp-action="Register" class="btn btn-brand">Написать отзыв</a>
         </div>
     }

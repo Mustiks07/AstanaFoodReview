@@ -32,7 +32,7 @@ public class Reviews : Controller
             var reviews = await _data.Reviews.GetReviewsByRestaurantAsync(r.Id);
             allReviews.AddRange(reviews.Select(HelperDTO.TransformReview));
         }
-        return View(allReviews.OrderByDescending(r => r.DateCreated));
+        return View("~/Views/Admin/Reviews/Index.cshtml", allReviews.OrderByDescending(r => r.DateCreated));
     }
 
     [HttpPost("delete/{id:int}")]
