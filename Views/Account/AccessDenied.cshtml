@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Нет доступа";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div style="font-size:4rem;margin-bottom:1rem;">🔒</div>
+            <h1 class="section-title">Доступ запрещён</h1>
+            <p style="color:var(--text-muted);" class="mb-4">
+                У вас нет прав для просмотра этой страницы.<br />
+                Эта страница доступна только администраторам.
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-brand">На главную</a>
+        </div>
+    </div>
+</div>

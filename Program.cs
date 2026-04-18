@@ -28,8 +28,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath       = "/account/login";
-    options.AccessDeniedPath = "/admin/accessdenied";
+    options.LoginPath        = "/account/login";
+    options.AccessDeniedPath = "/account/accessdenied";
 });
 
 builder.Services.AddScoped<IRestaurantsRepository, EFRestaurantsRepository>();
