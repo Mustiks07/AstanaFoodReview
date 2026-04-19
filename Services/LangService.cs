@@ -75,6 +75,15 @@ public class LangService
             ["show.delete"]       = "Удалить",
             ["show.owner_resp"]   = "Ответ заведения от",
             ["show.rev_count"]    = "отзывов",
+            // Review form
+            ["rev.page_title"]    = "Написать отзыв",
+            ["rev.heading"]       = "Отзыв о",
+            ["rev.title_label"]   = "Заголовок отзыва *",
+            ["rev.title_ph"]      = "Кратко о визите",
+            ["rev.text_label"]    = "Подробный отзыв",
+            ["rev.text_ph"]       = "Расскажите подробнее...",
+            ["rev.rating"]        = "Общая оценка *",
+            ["rev.submit"]        = "Опубликовать отзыв",
         },
         ["kz"] = new()
         {
@@ -145,6 +154,15 @@ public class LangService
             ["show.delete"]       = "Жою",
             ["show.owner_resp"]   = "Мекеме жауабы",
             ["show.rev_count"]    = "пікір",
+            // Review form
+            ["rev.page_title"]    = "Пікір жазу",
+            ["rev.heading"]       = "Пікір:",
+            ["rev.title_label"]   = "Пікір тақырыбы *",
+            ["rev.title_ph"]      = "Барлама туралы қысқаша",
+            ["rev.text_label"]    = "Толық пікір",
+            ["rev.text_ph"]       = "Толығырақ айтыңыз...",
+            ["rev.rating"]        = "Жалпы баға *",
+            ["rev.submit"]        = "Пікірді жариялау",
         }
     };
 

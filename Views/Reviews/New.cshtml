@@ -1,31 +1,31 @@
 @model CreateReviewViewModel
 @{
-    ViewData["Title"] = "Написать отзыв";
+    ViewData["Title"] = L.T("rev.page_title");
     string restaurantName = ViewBag.RestaurantName ?? "";
 }
 
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-7">
-            <h1 class="section-title">Отзыв о «@restaurantName»</h1>
+            <h1 class="section-title">@L.T("rev.heading") «@restaurantName»</h1>
             <div class="glass-card p-4">
                 <form asp-controller="Reviews" asp-action="New" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="RestaurantId" />
 
                     <div class="mb-3">
-                        <label asp-for="Title" class="form-label">Заголовок отзыва *</label>
-                        <input asp-for="Title" class="form-control" placeholder="Кратко о визите" />
+                        <label asp-for="Title" class="form-label">@L.T("rev.title_label")</label>
+                        <input asp-for="Title" class="form-control" placeholder="@L.T("rev.title_ph")" />
                         <span asp-validation-for="Title" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label asp-for="Text" class="form-label">Подробный отзыв</label>
-                        <textarea asp-for="Text" class="form-control" rows="4" placeholder="Расскажите подробнее..."></textarea>
+                        <label asp-for="Text" class="form-label">@L.T("rev.text_label")</label>
+                        <textarea asp-for="Text" class="form-control" rows="4" placeholder="@L.T("rev.text_ph")"></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Общая оценка *</label>
+                        <label class="form-label">@L.T("rev.rating")</label>
                         <div class="star-input">
                             @for (int i = 5; i >= 1; i--)
                             {
@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Еда *</label>
+                        <label class="form-label">@L.T("show.food") *</label>
                         <div class="star-input">
                             @for (int i = 5; i >= 1; i--)
                             {
@@ -47,7 +47,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Сервис *</label>
+                        <label class="form-label">@L.T("show.service") *</label>
                         <div class="star-input">
                             @for (int i = 5; i >= 1; i--)
                             {
@@ -58,7 +58,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Цена / Качество *</label>
+                        <label class="form-label">@L.T("show.price_q") *</label>
                         <div class="star-input">
                             @for (int i = 5; i >= 1; i--)
                             {
@@ -68,7 +68,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-brand w-100 mt-2">Опубликовать отзыв</button>
+                    <button type="submit" class="btn btn-brand w-100 mt-2">@L.T("rev.submit")</button>
                 </form>
             </div>
         </div>
