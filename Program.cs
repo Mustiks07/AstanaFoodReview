@@ -63,4 +63,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Upgrade default admin password on first run
+using (var scope = app.Services.CreateScope())
+    await DbInitializer.HardenAdminAsync(scope.ServiceProvider);
+
 app.Run();
