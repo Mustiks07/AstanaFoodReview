@@ -18,6 +18,8 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
         return View(new LoginViewModel { ReturnUrl = returnUrl });
     }
 
@@ -39,7 +41,12 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult Register() => View(new RegisterViewModel());
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Home");
+        return View(new RegisterViewModel());
+    }
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel vm)
