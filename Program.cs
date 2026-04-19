@@ -31,6 +31,24 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath        = "/account/login";
     options.AccessDeniedPath = "/account/accessdenied";
+
+    // Admin routes get their own login page
+    options.Events.OnRedirectToLogin = ctx =>
+    {
+        ctx.Response.Redirect(
+            ctx.Request.Path.StartsWithSegments("/admin")
+                ? "/admin/login"
+                : $"/account/login?ReturnUrl={Uri.EscapeDataString(ctx.Request.Path)}");
+        return Task.CompletedTask;
+    };
+    options.Events.OnRedirectToAccessDenied = ctx =>
+    {
+        ctx.Response.Redirect(
+            ctx.Request.Path.StartsWithSegments("/admin")
+                ? "/admin/login"
+                : "/account/accessdenied");
+        return Task.CompletedTask;
+    };
 });
 
 builder.Services.AddScoped<IRestaurantsRepository, EFRestaurantsRepository>();
