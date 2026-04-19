@@ -9,7 +9,7 @@
         <div class="col-lg-7">
             <h1 class="section-title">@L.T("rev.heading") «@restaurantName»</h1>
             <div class="glass-card p-4">
-                <form asp-controller="Reviews" asp-action="New" method="post">
+                <form action="/reviews/new" method="post">
                     @Html.AntiForgeryToken()
                     <input type="hidden" asp-for="RestaurantId" />
 
