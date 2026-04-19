@@ -97,7 +97,7 @@ public class LangService
             ["home.stat_avg"]     = "Орташа рейтинг",
             ["home.best"]         = "Үздік мекемелер",
             ["home.all_rating"]   = "Барлық рейтинг →",
-            ["home.by_cuisine"]   = "Асхана бойынша таңдау",
+            ["home.by_cuisine"]   = "Тағам түрі бойынша таңдау",
             ["home.been_there"]   = "Мейрамханада болдыңыз ба?",
             ["home.cta_body"]     = "Тіркеліп, Астана тұрғындарына үздік мекемені таңдауға көмектесіңіз",
             // Restaurants list
@@ -123,7 +123,7 @@ public class LangService
             ["map.title"]         = "Мекемелер картасы",
             ["map.sfx"]           = "мекеме",
             // Top
-            ["top.title"]         = "Астана мекемелерінің топы",
+            ["top.title"]         = "Астананың үздік мекемелері",
             ["top.empty"]         = "Деректер жоқ",
             // Show
             ["show.reviews"]      = "Пікірлер",
