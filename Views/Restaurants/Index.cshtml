@@ -1,16 +1,16 @@
 @model IEnumerable<RestaurantDTO>
 @{
-    ViewData["Title"] = "Заведения";
+    ViewData["Title"] = L.T("rest.title");
     var districts = ViewBag.Districts as IEnumerable<District> ?? [];
     var cuisines  = ViewBag.Cuisines  as IEnumerable<Cuisine>  ?? [];
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="section-title mb-0">Заведения Астаны</h1>
+        <h1 class="section-title mb-0">@L.T("rest.title")</h1>
         @if (User.IsInRole("Admin"))
         {
-            <a asp-action="New" class="btn btn-brand btn-sm">+ Добавить</a>
+            <a asp-action="New" class="btn btn-brand btn-sm">@L.T("rest.add")</a>
         }
     </div>
 
@@ -18,11 +18,11 @@
     <div class="filter-bar mb-4">
         <form method="get" class="row g-2 align-items-end">
             <div class="col-12 col-md-4">
-                <input type="text" name="search" class="form-control form-control-sm" placeholder="Поиск по названию..." value="@ViewBag.Search" />
+                <input type="text" name="search" class="form-control form-control-sm" placeholder="@L.T("rest.search")" value="@ViewBag.Search" />
             </div>
             <div class="col-6 col-md-2">
                 <select name="districtId" class="form-select form-select-sm">
-                    <option value="">Все районы</option>
+                    <option value="">@L.T("rest.all_dist")</option>
                     @foreach (var d in districts)
                     {
                         <option value="@d.Id" selected="@(ViewBag.DistrictId == d.Id)">@d.Title</option>
@@ -31,7 +31,7 @@
             </div>
             <div class="col-6 col-md-2">
                 <select name="cuisineId" class="form-select form-select-sm">
-                    <option value="">Все кухни</option>
+                    <option value="">@L.T("rest.all_cui")</option>
                     @foreach (var c in cuisines)
                     {
                         <option value="@c.Id" selected="@(ViewBag.CuisineId == c.Id)">@c.Title</option>
@@ -40,29 +40,29 @@
             </div>
             <div class="col-6 col-md-2">
                 <select name="priceRange" class="form-select form-select-sm">
-                    <option value="">Любая цена</option>
-                    <option value="0" selected="@(ViewBag.PriceRange?.ToString() == "Budget")">до 2000 ₸</option>
-                    <option value="1" selected="@(ViewBag.PriceRange?.ToString() == "Medium")">2000–5000 ₸</option>
-                    <option value="2" selected="@(ViewBag.PriceRange?.ToString() == "Premium")">5000–15000 ₸</option>
-                    <option value="3" selected="@(ViewBag.PriceRange?.ToString() == "Luxury")">от 15000 ₸</option>
+                    <option value="">@L.T("rest.any_price")</option>
+                    <option value="0" selected="@(ViewBag.PriceRange?.ToString() == "Budget")">@L.T("price.budget")</option>
+                    <option value="1" selected="@(ViewBag.PriceRange?.ToString() == "Medium")">@L.T("price.medium")</option>
+                    <option value="2" selected="@(ViewBag.PriceRange?.ToString() == "Premium")">@L.T("price.premium")</option>
+                    <option value="3" selected="@(ViewBag.PriceRange?.ToString() == "Luxury")">@L.T("price.luxury")</option>
                 </select>
             </div>
             <div class="col-6 col-md-1">
                 <select name="sort" class="form-select form-select-sm">
-                    <option value="" selected="@(ViewBag.Sort == null)">Новые</option>
-                    <option value="rating" selected="@(ViewBag.Sort == "rating")">Рейтинг</option>
-                    <option value="reviews" selected="@(ViewBag.Sort == "reviews")">Отзывы</option>
+                    <option value="" selected="@(ViewBag.Sort == null)">@L.T("rest.sort_new")</option>
+                    <option value="rating" selected="@(ViewBag.Sort == "rating")">@L.T("rest.sort_rating")</option>
+                    <option value="reviews" selected="@(ViewBag.Sort == "reviews")">@L.T("rest.sort_reviews")</option>
                 </select>
             </div>
             <div class="col-12 col-md-1">
-                <button type="submit" class="btn btn-brand btn-sm w-100">Найти</button>
+                <button type="submit" class="btn btn-brand btn-sm w-100">@L.T("rest.find_btn")</button>
             </div>
         </form>
     </div>
 
     @if (!Model.Any())
     {
-        <div class="text-center text-muted py-5">Заведения не найдены</div>
+        <div class="text-center text-muted py-5">@L.T("rest.not_found")</div>
     }
     else
     {
@@ -93,13 +93,13 @@
                                     <span class="badge-price">@r.PriceRangeLabel</span>
                                     @if (r.IsVerified)
                                     {
-                                        <span class="badge-verified">✓ Верифицировано</span>
+                                        <span class="badge-verified">@L.T("rest.verified")</span>
                                     }
                                 </div>
                                 <div class="rest-footer d-flex align-items-center gap-2">
                                     <span class="stars">@Html.Raw(HelperDTO.StarsHtml(r.AverageRating))</span>
                                     <span class="text-muted small">@r.AverageRating</span>
-                                    <span class="text-muted small ms-auto">@r.ReviewCount отз.</span>
+                                    <span class="text-muted small ms-auto">@r.ReviewCount @L.T("rest.reviews_sfx")</span>
                                 </div>
                             </div>
                         </div>

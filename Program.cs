@@ -2,6 +2,7 @@ using AstanaFoodReviews.Domain;
 using AstanaFoodReviews.Domain.Repositories.Abstract;
 using AstanaFoodReviews.Domain.Repositories.EntityFramework;
 using AstanaFoodReviews.Infrastructure;
+using AstanaFoodReviews.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -40,6 +41,9 @@ builder.Services.AddScoped<IOwnerResponsesRepository, EFOwnerResponsesRepository
 builder.Services.AddScoped<DataManager>();
 
 builder.Services.Configure<AppConfig>(builder.Configuration.GetSection("Project"));
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<LangService>();
 
 builder.Services.AddControllersWithViews();
 

@@ -1,18 +1,18 @@
 @model IEnumerable<RestaurantDTO>
 @{
-    ViewData["Title"] = "Топ заведений";
+    ViewData["Title"] = L.T("top.title");
     var list = Model.ToList();
 }
 
 <div class="container py-4">
-    <h1 class="section-title">Топ заведений Астаны</h1>
+    <h1 class="section-title">@L.T("top.title")</h1>
 
     <div class="glass-card p-2">
         @for (int i = 0; i < list.Count; i++)
         {
             var r = list[i];
             var rankClass = i == 0 ? "rank-gold" : i == 1 ? "rank-silver" : i == 2 ? "rank-bronze" : "rank-other";
-            <a href="/restaurants/@r.Id" class="text-decoration-none">
+            <a href="/Restaurants/Show/@r.Id" class="text-decoration-none">
                 <div class="d-flex align-items-center gap-3 p-3 @(i < list.Count - 1 ? "border-bottom" : "")" style="border-color:var(--border)!important;">
                     <span class="rank-num @rankClass">@(i + 1)</span>
                     <div class="flex-grow-1">
@@ -21,7 +21,7 @@
                     </div>
                     <div class="text-end">
                         <div class="stars">@Html.Raw(HelperDTO.StarsHtml(r.AverageRating))</div>
-                        <div class="text-muted small">@r.AverageRating · @r.ReviewCount отз.</div>
+                        <div class="text-muted small">@r.AverageRating · @r.ReviewCount @L.T("rest.reviews_sfx")</div>
                     </div>
                     @if (r.IsVerified)
                     {
@@ -32,7 +32,7 @@
         }
         @if (!list.Any())
         {
-            <div class="p-4 text-center text-muted">Нет данных</div>
+            <div class="p-4 text-center text-muted">@L.T("top.empty")</div>
         }
     </div>
 </div>

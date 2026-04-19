@@ -1,11 +1,11 @@
 @model IEnumerable<District>
 @{
-    ViewData["Title"] = "Карта";
+    ViewData["Title"] = L.T("map.title");
     var districts = Model.ToList();
 }
 
 <div class="container py-4">
-    <h1 class="section-title">Карта заведений</h1>
+    <h1 class="section-title">@L.T("map.title")</h1>
 
     <div id="map" class="mb-4"></div>
 
@@ -13,10 +13,10 @@
         @foreach (var d in districts)
         {
             <div class="col-6 col-md-3">
-                <a href="/restaurants?districtId=@d.Id" class="text-decoration-none">
+                <a href="/Restaurants/Index?districtId=@d.Id" class="text-decoration-none">
                     <div class="glass-card p-3 text-center">
                         <div class="fw-semibold" style="color:var(--text);">@d.Title</div>
-                        <div class="text-muted small">@d.Restaurants.Count заведений</div>
+                        <div class="text-muted small">@d.Restaurants.Count @L.T("map.sfx")</div>
                     </div>
                 </a>
             </div>
@@ -27,20 +27,85 @@
 @section Scripts {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    .map-pin {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .map-pin-bubble {
+        background: var(--brand);
+        color: #fff;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        box-shadow: 0 4px 14px rgba(249,115,22,0.45);
+        transition: transform .15s;
+    }
+    .map-pin-bubble:hover { transform: scale(1.15); }
+    .map-pin-tail {
+        width: 3px;
+        height: 10px;
+        background: var(--brand);
+        border-radius: 0 0 3px 3px;
+    }
+    .map-pin-count {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: #fff;
+        color: var(--brand);
+        border: 2px solid var(--brand);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+    .leaflet-popup-content-wrapper {
+        border-radius: 12px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+        border: 1px solid var(--border) !important;
+    }
+    .leaflet-popup-content { margin: 12px 16px !important; font-family: 'Inter', sans-serif; }
+    .popup-title { font-weight: 700; font-size: .95rem; color: var(--text); margin-bottom: 4px; }
+    .popup-count { font-size: .8rem; color: var(--text-muted); margin-bottom: 8px; }
+    .popup-link {
+        display: inline-block;
+        background: var(--brand);
+        color: #fff !important;
+        border-radius: 8px;
+        padding: 4px 12px;
+        font-size: .8rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .popup-link:hover { background: var(--brand-dark); }
+</style>
 <script>
     var map = L.map('map').setView([51.18, 71.45], 11);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>'
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+        maxZoom: 18
     }).addTo(map);
 
     var districts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
         districts.Where(d => d.Restaurants.Any()).Select(d => new {
+            id   = d.Id,
             name = d.Title,
             count = d.Restaurants.Count
         })
     ));
 
-    // Static approximate coordinates for Astana districts
     var coords = {
         "Есіл":     [51.175, 71.42],
         "Алматы":   [51.15,  71.47],
@@ -52,12 +117,33 @@
         "Байтерек": [51.18,  71.44]
     };
 
-    var brandColor = "#F97316";
+    var sfx = "@L.T("map.sfx")";
+
     districts.forEach(function(d) {
         var ll = coords[d.name];
         if (!ll) return;
-        L.circleMarker(ll, { radius: 10 + d.count * 2, color: brandColor, fillColor: brandColor, fillOpacity: 0.5 })
-            .bindPopup("<b>" + d.name + "</b><br>" + d.count + " заведений")
+
+        var icon = L.divIcon({
+            className: '',
+            html: '<div class="map-pin" style="position:relative;">' +
+                      '<div class="map-pin-bubble">🍽' +
+                          '<div class="map-pin-count">' + d.count + '</div>' +
+                      '</div>' +
+                      '<div class="map-pin-tail"></div>' +
+                  '</div>',
+            iconSize: [44, 56],
+            iconAnchor: [22, 56],
+            popupAnchor: [0, -60]
+        });
+
+        var popup = '<div class="popup-title">' + d.name + '</div>' +
+                    '<div class="popup-count">' + d.count + ' ' + sfx + '</div>' +
+                    '<a class="popup-link" href="/Restaurants/Index?districtId=' + d.id + '">' +
+                        (sfx === 'мекеме' ? 'Қарау →' : 'Смотреть →') +
+                    '</a>';
+
+        L.marker(ll, { icon: icon })
+            .bindPopup(popup)
             .addTo(map);
     });
 </script>

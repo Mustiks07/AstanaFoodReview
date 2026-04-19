@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="@L.Lang">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -16,30 +16,35 @@
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav me-auto gap-1">
-                    <li class="nav-item"><a class="nav-link" asp-controller="Restaurants" asp-action="Index">Заведения</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Top" asp-action="Index">Топ</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Map" asp-action="Index">Карта</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">О нас</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Restaurants" asp-action="Index">@L.T("nav.restaurants")</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Top" asp-action="Index">@L.T("nav.top")</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Map" asp-action="Index">@L.T("nav.map")</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">@L.T("nav.about")</a></li>
                 </ul>
                 <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <!-- Language switcher -->
+                    <li class="nav-item d-flex gap-1">
+                        <a href="/lang/ru?returnUrl=@Context.Request.Path" class="lang-btn @(L.Lang == "ru" ? "active" : "")">РУ</a>
+                        <a href="/lang/kz?returnUrl=@Context.Request.Path" class="lang-btn @(L.Lang == "kz" ? "active" : "")">ҚЗ</a>
+                    </li>
                     @if (User.Identity?.IsAuthenticated == true)
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Profile" asp-action="Index">Профиль</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Profile" asp-action="Index">@L.T("nav.profile")</a></li>
                         @if (User.IsInRole("Admin"))
                         {
-                            <li class="nav-item"><a class="nav-link" href="/admin">Админ</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/admin">@L.T("nav.admin")</a></li>
                         }
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                 @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-ghost btn-sm">Выйти</button>
+                                <button type="submit" class="btn btn-ghost btn-sm">@L.T("nav.logout")</button>
                             </form>
                         </li>
                     }
                     else
                     {
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Войти</a></li>
-                        <li class="nav-item"><a class="btn btn-brand btn-sm" asp-controller="Account" asp-action="Register">Регистрация</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">@L.T("nav.login")</a></li>
+                        <li class="nav-item"><a class="btn btn-brand btn-sm" asp-controller="Account" asp-action="Register">@L.T("nav.register")</a></li>
                     }
                 </ul>
             </div>
@@ -52,7 +57,7 @@
 
     <footer>
         <div class="container">
-            <span>© 2026 Astana Food Reviews — отзывы о ресторанах Астаны</span>
+            <span>© 2026 Astana Food Reviews — @(L.Lang == "kz" ? "Астана мейрамханалары туралы пікірлер" : "отзывы о ресторанах Астаны")</span>
         </div>
     </footer>
 
