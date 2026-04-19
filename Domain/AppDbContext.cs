@@ -86,7 +86,7 @@ public class AppDbContext : IdentityDbContext
                 Id = 1, Title = "Nomad Steak House",
                 Description = "Лучшие стейки из казахстанской говядины. Уютная атмосфера и традиционные рецепты кочевников.",
                 Address = "пр. Кабанбай батыра, 11", Phone = "+7 (717) 200-11-22",
-                ImageUrl = "https://images.unsplash.com/photo-1544025162-d76538369348?w=600&fit=crop",
+                ImageUrl = "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=600&fit=crop",
                 PriceRange = PriceRangeEnum.Premium, IsVerified = true,
                 DistrictId = 3, CuisineId = 1, DateCreated = seedDate
             },
@@ -167,7 +167,7 @@ public class AppDbContext : IdentityDbContext
                 Id = 10, Title = "Sakura Japanese Restaurant",
                 Description = "Премиальная японская кухня: темпура, омакасе-сеты, рамен и японские виски.",
                 Address = "пр. Достык, 12", Phone = "+7 (717) 260-22-33",
-                ImageUrl = "https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=600&fit=crop",
+                ImageUrl = "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=600&fit=crop",
                 PriceRange = PriceRangeEnum.Premium, IsVerified = true,
                 DistrictId = 4, CuisineId = 4, DateCreated = seedDate
             },
