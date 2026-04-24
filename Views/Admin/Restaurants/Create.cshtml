@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Добавить заведение";
+    Layout = "_AdminLayout";
+    var districts = ViewBag.Districts as IEnumerable<District> ?? [];
+    var cuisines  = ViewBag.Cuisines  as IEnumerable<Cuisine>  ?? [];
+}
+
+<h1 class="section-title">Добавить заведение</h1>
+<div class="glass-card p-4" style="max-width:700px;">
+    <form action="/admin/restaurants/create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label class="form-label">Название *</label>
+            <input name="title" class="form-control" required placeholder="Например: Nomad Steak House" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Описание</label>
+            <textarea name="description" class="form-control" rows="3" placeholder="Краткое описание заведения..."></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Адрес</label>
+            <input name="address" class="form-control" placeholder="пр. Кабанбай батыра, 11" />
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Телефон</label>
+                <input name="phone" class="form-control" placeholder="+7 (717) 200-00-00" />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Сайт</label>
+                <input name="website" class="form-control" placeholder="https://example.com" />
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">URL фотографии</label>
+            <input name="imageUrl" class="form-control" placeholder="https://images.unsplash.com/..." />
+        </div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Район</label>
+                <select name="districtId" class="form-select">
+                    @foreach (var d in districts)
+                    {
+                        <option value="@d.Id">@d.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Кухня</label>
+                <select name="cuisineId" class="form-select">
+                    @foreach (var c in cuisines)
+                    {
+                        <option value="@c.Id">@c.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Ценовой диапазон</label>
+                <select name="priceRange" class="form-select">
+                    <option value="0">до 2000 ₸</option>
+                    <option value="1">2000–5000 ₸</option>
+                    <option value="2">5000–15000 ₸</option>
+                    <option value="3">от 15000 ₸</option>
+                </select>
+            </div>
+        </div>
+        <div class="mb-4">
+            <div class="form-check">
+                <input name="isVerified" type="checkbox" class="form-check-input" id="isVerified" value="true" />
+                <label class="form-check-label text-muted" for="isVerified">Верифицировано</label>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-brand">Добавить заведение</button>
+            <a href="/admin/restaurants" class="btn btn-ghost">Отмена</a>
+        </div>
+    </form>
+</div>

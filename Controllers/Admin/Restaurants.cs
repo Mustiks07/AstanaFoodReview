@@ -1,4 +1,6 @@
 using AstanaFoodReviews.Domain;
+using AstanaFoodReviews.Domain.Entities;
+using AstanaFoodReviews.Domain.Enums;
 using AstanaFoodReviews.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +22,38 @@ public class AdminRestaurantsController : Controller
         return View("~/Views/Admin/Restaurants/Index.cshtml", HelperDTO.TransformRestaurants(restaurants));
     }
 
+    [HttpGet("create")]
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.Districts = await _data.Districts.GetDistrictsAsync();
+        ViewBag.Cuisines  = await _data.Cuisines.GetCuisinesAsync();
+        return View("~/Views/Admin/Restaurants/Create.cshtml");
+    }
+
+    [HttpPost("create"), ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(
+        string title, string? description, string? address,
+        string? phone, string? website, string? imageUrl,
+        int districtId, int cuisineId, PriceRangeEnum priceRange, bool isVerified)
+    {
+        var restaurant = new Restaurant
+        {
+            Title       = title,
+            Description = description,
+            Address     = address,
+            Phone       = phone,
+            Website     = website,
+            ImageUrl    = imageUrl,
+            DistrictId  = districtId,
+            CuisineId   = cuisineId,
+            PriceRange  = priceRange,
+            IsVerified  = isVerified,
+            DateCreated = DateTime.UtcNow
+        };
+        await _data.Restaurants.SaveRestaurantAsync(restaurant);
+        return RedirectToAction(nameof(Index));
+    }
+
     [HttpGet("edit/{id:int}")]
     public async Task<IActionResult> Edit(int id)
     {
@@ -31,12 +65,11 @@ public class AdminRestaurantsController : Controller
         return View("~/Views/Admin/Restaurants/Edit.cshtml", restaurant);
     }
 
-    [HttpPost("edit/{id:int}")]
-    [ValidateAntiForgeryToken]
+    [HttpPost("edit/{id:int}"), ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(
         int id, string title, string? description, string? address,
         string? phone, string? website, string? imageUrl,
-        int districtId, int cuisineId, bool isVerified)
+        int districtId, int cuisineId, PriceRangeEnum priceRange, bool isVerified)
     {
         var restaurant = await _data.Restaurants.GetRestaurantByIdAsync(id);
         if (restaurant == null) return NotFound();
@@ -49,14 +82,14 @@ public class AdminRestaurantsController : Controller
         restaurant.ImageUrl    = imageUrl;
         restaurant.DistrictId  = districtId;
         restaurant.CuisineId   = cuisineId;
+        restaurant.PriceRange  = priceRange;
         restaurant.IsVerified  = isVerified;
 
         await _data.Restaurants.SaveRestaurantAsync(restaurant);
         return RedirectToAction(nameof(Index));
     }
 
-    [HttpPost("delete/{id:int}")]
-    [ValidateAntiForgeryToken]
+    [HttpPost("delete/{id:int}"), ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(int id)
     {
         await _data.Restaurants.DeleteRestaurantAsync(id);
